@@ -27,6 +27,8 @@ import org.opengoofy.index12306.framework.starter.convention.errorcode.IErrorCod
 @AllArgsConstructor
 public enum UserRegisterErrorCodeEnum implements IErrorCode {
 
+    USR_NOT_LOGIN("A005999", "用户未登录"),
+
     USER_REGISTER_FAIL("A006000", "用户注册失败"),
 
     USER_NAME_NOTNULL("A006001", "用户名不能为空"),

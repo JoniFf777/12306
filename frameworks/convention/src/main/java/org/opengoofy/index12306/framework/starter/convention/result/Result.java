@@ -62,4 +62,7 @@ public class Result<T> implements Serializable {
     public boolean isSuccess() {
         return SUCCESS_CODE.equals(code);
     }
+
+
+
 }

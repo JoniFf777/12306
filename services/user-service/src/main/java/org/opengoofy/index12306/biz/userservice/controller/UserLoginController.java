@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.opengoofy.index12306.biz.userservice.dto.req.UserLoginReqDTO;
 import org.opengoofy.index12306.biz.userservice.dto.resp.UserLoginRespDTO;
 import org.opengoofy.index12306.biz.userservice.service.UserLoginService;
+import org.opengoofy.index12306.framework.starter.convention.exception.ClientException;
 import org.opengoofy.index12306.framework.starter.convention.result.Result;
 import org.opengoofy.index12306.framework.starter.web.Results;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,6 +54,13 @@ public class UserLoginController {
     @GetMapping("/api/user-service/check-login")
     public Result<UserLoginRespDTO> checkLogin(@RequestParam("accessToken") String accessToken) {
         UserLoginRespDTO result = userLoginService.checkLogin(accessToken);
+
+        // ====== 这里必须加判断！======
+        if (result == null) {
+            // 未登录，抛出异常 or 返回错误
+            throw new ClientException("用户未登录");
+        }
+
         return Results.success(result);
     }
 

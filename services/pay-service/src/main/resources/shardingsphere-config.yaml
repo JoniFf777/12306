@@ -1,15 +1,54 @@
+#dataSources:
+#  ds_0:
+#    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+#    driverClassName: com.mysql.cj.jdbc.Driver
+#    jdbcUrl: jdbc:mysql://127.0.0.1:3306/12306_pay_0?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+#    username: root
+#    password: root
+#
+#  ds_1:
+#    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+#    driverClassName: com.mysql.cj.jdbc.Driver
+#    jdbcUrl: jdbc:mysql://127.0.0.1:3306/12306_pay_1?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+#    username: root
+#    password: root
+#
+#rules:
+#  - !SHARDING
+#    tables:
+#      t_pay:
+#        actualDataNodes: ds_${0..1}.t_pay_${0..31}
+#        databaseStrategy:
+#          complex:
+#            shardingColumns: order_sn,pay_sn
+#            shardingAlgorithmName: pay_database_complex_mod
+#        tableStrategy:
+#          complex:
+#            shardingColumns: order_sn,pay_sn
+#            shardingAlgorithmName: pay_table_complex_mod
+#    shardingAlgorithms:
+#      pay_database_complex_mod:
+#        type: CLASS_BASED
+#        props:
+#          algorithmClassName: org.opengoofy.index12306.biz.payservice.dao.algorithm.PayDataBaseComplexAlgorithm
+#          sharding-count: 32
+#          table-sharding-count: 16
+#          strategy: complex
+#      pay_table_complex_mod:
+#        type: CLASS_BASED
+#        props:
+#          algorithmClassName: org.opengoofy.index12306.biz.payservice.dao.algorithm.PayTableComplexAlgorithm
+#          sharding-count: 32
+#          strategy: complex
+#props:
+#  sql-show: true
+
 dataSources:
+  # 只保留 ds_0，直接指向你唯一的本地数据库 12306
   ds_0:
     dataSourceClassName: com.zaxxer.hikari.HikariDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
-    jdbcUrl: jdbc:mysql://127.0.0.1:3306/12306_pay_0?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-    username: root
-    password: root
-
-  ds_1:
-    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
-    driverClassName: com.mysql.cj.jdbc.Driver
-    jdbcUrl: jdbc:mysql://127.0.0.1:3306/12306_pay_1?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    jdbcUrl: jdbc:mysql://127.0.0.1:3306/12306?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
     password: root
 
@@ -17,28 +56,23 @@ rules:
   - !SHARDING
     tables:
       t_pay:
-        actualDataNodes: ds_${0..1}.t_pay_${0..31}
-        databaseStrategy:
-          complex:
-            shardingColumns: order_sn,pay_sn
-            shardingAlgorithmName: pay_database_complex_mod
+        # 修改为 0-15 张表
+        actualDataNodes: ds_0.t_pay_${0..15}
+        # 只有一个库，删除了 databaseStrategy，只保留 tableStrategy
         tableStrategy:
           complex:
             shardingColumns: order_sn,pay_sn
             shardingAlgorithmName: pay_table_complex_mod
+
     shardingAlgorithms:
-      pay_database_complex_mod:
-        type: CLASS_BASED
-        props:
-          algorithmClassName: org.opengoofy.index12306.biz.payservice.dao.algorithm.PayDataBaseComplexAlgorithm
-          sharding-count: 32
-          table-sharding-count: 16
-          strategy: complex
+      # 删除了分库算法，并将分表算法的取模基数改为 16
       pay_table_complex_mod:
         type: CLASS_BASED
         props:
           algorithmClassName: org.opengoofy.index12306.biz.payservice.dao.algorithm.PayTableComplexAlgorithm
-          sharding-count: 32
+          sharding-count: 16
           strategy: complex
 props:
   sql-show: true
+
+
