@@ -64,6 +64,15 @@ public class UserInfoController {
     }
 
     /**
+     * 修改用户
+     */
+    @PostMapping("/api/user-service/update")
+    public Result<Void> update(@RequestBody @Valid UserUpdateReqDTO requestParam) {
+        userService.update(requestParam);
+        return Results.success();
+    }
+
+    /**
      * 检查用户名是否已存在
      */
     @GetMapping("/api/user-service/has-username")
@@ -77,15 +86,6 @@ public class UserInfoController {
     @PostMapping("/api/user-service/register")
     public Result<UserRegisterRespDTO> register(@RequestBody @Valid UserRegisterReqDTO requestParam) {
         return Results.success(userLoginService.register(requestParam));
-    }
-
-    /**
-     * 修改用户
-     */
-    @PostMapping("/api/user-service/update")
-    public Result<Void> update(@RequestBody @Valid UserUpdateReqDTO requestParam) {
-        userService.update(requestParam);
-        return Results.success();
     }
 
     /**

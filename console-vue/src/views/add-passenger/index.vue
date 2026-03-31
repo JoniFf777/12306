@@ -140,9 +140,13 @@ const onSubmit = () => {
     .then(() => {
       loading.value = true
       let params = { username, ...toRaw(formData.value) }
+      // if (query.type === 'edit') {
+      //   const { id, phone } = formData.value
+      //   params = { id, phone, username }
+      //   return fetchEditPassenger(params).then((res) => {
       if (query.type === 'edit') {
-        const { id, phone } = formData.value
-        params = { id, phone, username }
+        // 把表单里所有数据完整传过去！
+        params = { ...toRaw(formData.value), username };
         return fetchEditPassenger(params).then((res) => {
           if (res.success) {
             message.success(

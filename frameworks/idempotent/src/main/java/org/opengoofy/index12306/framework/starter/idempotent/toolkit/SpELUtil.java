@@ -59,9 +59,9 @@ public class SpELUtil {
      */
     public static Object parse(String spEl, Method method, Object[] contextObj) {
         DefaultParameterNameDiscoverer discoverer = new DefaultParameterNameDiscoverer();
+        String[] params = discoverer.getParameterNames(method);
         ExpressionParser parser = new SpelExpressionParser();
         Expression exp = parser.parseExpression(spEl);
-        String[] params = discoverer.getParameterNames(method);
         StandardEvaluationContext context = new StandardEvaluationContext();
         if (ArrayUtil.isNotEmpty(params)) {
             for (int len = 0; len < params.length; len++) {
